@@ -1,20 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MusicPlayer.Models;
+using MusicPlayer.Models.ViewModels;
+using MusicPlayer.Models.Database;
+using MusicPlayer.Models.DataModels;
 using System.Diagnostics;
 
 namespace MusicPlayer.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly MusicPlayerDbContext _db;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(MusicPlayerDbContext db, ILogger<HomeController> logger)
         {
+            _db = db;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
+            IQueryable<User> users = _db.Users;
             return View();
         }
 
