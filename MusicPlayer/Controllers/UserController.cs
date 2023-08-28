@@ -1,83 +1,60 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MusicPlayer.Models.Database;
+using MusicPlayer.Models.DataModels;
+using MusicPlayer.Models.ViewModels;
 
 namespace MusicPlayer.Controllers
 {
     public class UserController : Controller
     {
-        // GET: UserController
-        public ActionResult Index()
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly MusicPlayerDbContext _db;
+
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, MusicPlayerDbContext db)
         {
-            return View();
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _db = db;
         }
 
-        // GET: UserController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Login()
         {
-            return View();
+            // To hold the value inputted if accidentally reload pages
+            var response = new LoginViewModel();
+            return View(response);
         }
 
-        // GET: UserController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UserController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return View(loginViewModel);
             }
-            catch
-            {
-                return View();
-            }
-        }
+            
+            var user = await _userManager.FindByEmailAsync(loginViewModel.EmailAddress);
 
-        // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+            if (user != null)
+            {
+                var passwordCheck = await _userManager.CheckPasswordAsync(user, loginViewModel.Password);
+                if (passwordCheck)
+                {
+                    /// <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+                    /// <param name="lockoutOnFailure">Flag indicating if the user account should be locked if the sign in fails.</param>
+                    var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, true, false);
 
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+                    if (result.Succeeded)
+                    {
+                        // TODO: Change later when Listening Page is created
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                loginViewModel.IsPasswordCorrect = false;
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            loginViewModel.IsUserExist = false;
+            return View(loginViewModel);
         }
     }
 }
