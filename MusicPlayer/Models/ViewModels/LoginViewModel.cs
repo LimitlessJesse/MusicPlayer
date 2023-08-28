@@ -5,6 +5,8 @@ namespace MusicPlayer.Models.ViewModels
     public class LoginViewModel
     {
         [Display(Name = "Email Address")]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
         [Required(ErrorMessage = "Email address is required")]
         public string EmailAddress { get; set; }
 
@@ -16,6 +18,6 @@ namespace MusicPlayer.Models.ViewModels
         public bool IsPasswordCorrect { get; set; } = true;
         public bool IsUserExist { get; set; } = true;
 
-        public const string IncorrectCredentialErrorMessage = "Credential is not correct, please try again!";
+        public const string IncorrectCredentialErrorMessage = "Wrong credentials , please try again!";
     }
 }
