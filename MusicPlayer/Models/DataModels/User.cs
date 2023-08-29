@@ -5,9 +5,6 @@ namespace MusicPlayer.Models.DataModels
 {
     public class User : IdentityUser
     {
-        [Required]
-        public string UserName { get; set; }
-
         public string FirstName { get; set; }
         public string LastName { get; set; }
 

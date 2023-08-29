@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MusicPlayer.Models.ViewModels
+namespace MusicPlayer.Models.ViewModels.User
 {
     public class LoginViewModel
     {

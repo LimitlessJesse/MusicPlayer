@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MusicPlayer.Models.Database;
 using MusicPlayer.Models.DataModels;
-using MusicPlayer.Models.ViewModels;
+using MusicPlayer.Models.ViewModels.User;
 
 namespace MusicPlayer.Controllers
 {
@@ -55,6 +55,55 @@ namespace MusicPlayer.Controllers
             }
             loginViewModel.IsUserExist = false;
             return View(loginViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult Register() 
+        {
+            var response = new RegisterViewModel();
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(registerViewModel);
+            }
+
+            var user = await _userManager.FindByEmailAsync(registerViewModel.EmailAddress);
+            if(user != null)
+            {
+                registerViewModel.IsEmailInUse = true;
+                return View(registerViewModel);
+            }
+            
+            var newUser = new User()
+            {
+                Email = registerViewModel.EmailAddress,
+                UserName = registerViewModel.UserName,
+                FirstName = registerViewModel.FirstName,
+                LastName = registerViewModel.LastName,
+            };
+
+            var result = await _userManager.CreateAsync(newUser, registerViewModel.Password);
+
+            if (!result.Succeeded)
+            {
+                registerViewModel.UserCreationFailed = true;
+                return View(registerViewModel);
+            }
+
+            return RedirectToAction("Index", "Home");
+            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

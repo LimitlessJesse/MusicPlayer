@@ -1,4 +1,4 @@
-﻿@using MusicPlayer.Models.ViewModels
+﻿@using MusicPlayer.Models.ViewModels.User
 @model LoginViewModel
 
 
@@ -33,6 +33,7 @@
                     <div class="form-group">
                         <input class="btn btn-outline-success float right" type="submit" value="Log in" />
                         <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Cancel</a>
+                        <a class="btn btn-outline-info float-end" asp-controller="User" asp-action="Register">Register</a>
                     </div>
                 </form>
             </div>
