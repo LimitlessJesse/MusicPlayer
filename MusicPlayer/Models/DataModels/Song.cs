@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MusicPlayer.Models
+namespace MusicPlayer.Models.DataModels
 {
     public class Song
     {

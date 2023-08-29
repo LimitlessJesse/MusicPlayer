@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using MusicPlayer.Models.DataModels;
 
-namespace MusicPlayer.Models.Data
+namespace MusicPlayer.Models.Database
 {
-    public class MusicPlayerDbContext : DbContext
+    public class MusicPlayerDbContext : IdentityDbContext<User>
     {
         public MusicPlayerDbContext(DbContextOptions<MusicPlayerDbContext> options) : base(options) 
         {
@@ -10,7 +12,6 @@ namespace MusicPlayer.Models.Data
 
         public DbSet<Song> Songs { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
-        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,11 +19,14 @@ namespace MusicPlayer.Models.Data
                 .HasMany(e => e.Playlists)
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId)
+                .HasPrincipalKey(e => e.Id)
                 .IsRequired();
 
             modelBuilder.Entity<Playlist>()
                 .HasMany(e => e.Songs)
                 .WithMany(e => e.Playlists);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
