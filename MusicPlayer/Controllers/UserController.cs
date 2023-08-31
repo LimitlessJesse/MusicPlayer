@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MusicPlayer.Models.Database;
 using MusicPlayer.Models.DataModels;
 using MusicPlayer.Models.ViewModels.User;
+using System.Security.Claims;
 
 namespace MusicPlayer.Controllers
 {
@@ -10,13 +10,11 @@ namespace MusicPlayer.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly MusicPlayerDbContext _db;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, MusicPlayerDbContext db)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _db = db;
         }
 
         public IActionResult Login()
@@ -47,8 +45,7 @@ namespace MusicPlayer.Controllers
 
                     if (result.Succeeded)
                     {
-                        // TODO: Change later when Listening Page is created
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Playlist");
                     }
                 }
                 loginViewModel.IsPasswordCorrect = false;
@@ -99,7 +96,7 @@ namespace MusicPlayer.Controllers
             
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
