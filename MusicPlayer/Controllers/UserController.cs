@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MusicPlayer.Models.DataModels;
-using MusicPlayer.Models.ViewModels.User;
+using MusicPlayer.Models.ViewModels.UserViewModels;
 using System.Security.Claims;
 
 namespace MusicPlayer.Controllers

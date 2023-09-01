@@ -22,9 +22,20 @@ namespace MusicPlayer.Models.Database
                 .HasPrincipalKey(e => e.Id)
                 .IsRequired();
 
-            modelBuilder.Entity<Playlist>()
+            modelBuilder.Entity<User>()
                 .HasMany(e => e.Songs)
-                .WithMany(e => e.Playlists);
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserId)
+                .HasPrincipalKey(e => e.Id)
+                .IsRequired();
+
+            modelBuilder.Entity<Song>()
+                .HasKey(e => new { e.SourceId, e.UserId });
+
+            modelBuilder.Entity<Song>()
+                .HasOne(e => e.User)
+                .WithMany(e => e.Songs)
+                .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MusicPlayer.Models.Database.Interfaces;
 using MusicPlayer.Models.DataModels;
-using MusicPlayer.Models.ViewModels.Playlist;
+using MusicPlayer.Models.ViewModels.PlaylistViewModel;
 using System.Security.Claims;
 
 namespace MusicPlayer.Controllers
@@ -57,8 +57,7 @@ namespace MusicPlayer.Controllers
 
         public async Task<IActionResult> DeletePlaylist(int id)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var playlist = await _playlistRepository.GetUserPlaylistByIdAsync(currentUserId, id);
+            var playlist = await _playlistRepository.GetCurrentUserPlaylistByIdAsync(id);
             _playlistRepository.DeletePlaylistFromCurrentUser(playlist);
             return RedirectToAction("Index", "Playlist");
         }

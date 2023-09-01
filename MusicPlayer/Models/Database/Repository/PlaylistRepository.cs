@@ -18,9 +18,9 @@ namespace MusicPlayer.Models.Database.Repository
             return await _dbContext.Playlists.Where(p => p.UserId == userId).ToListAsync();
         }
 
-        public async Task<Playlist> GetUserPlaylistByIdAsync(string userId, int playlistId)
+        public async Task<Playlist> GetCurrentUserPlaylistByIdAsync(int playlistId)
         {
-            return await _dbContext.Playlists.FirstOrDefaultAsync(p => p.UserId == userId && p.PlaylistId == playlistId);
+            return await _dbContext.Playlists.Include(p => p.Songs).FirstOrDefaultAsync(p => p.PlaylistId == playlistId);
         }
 
         public bool AddPlaylistToCurrentUser(Playlist playlist)
