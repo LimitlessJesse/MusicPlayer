@@ -10,5 +10,7 @@ namespace MusicPlayer.Models.DataModels
         // One user can have multiple playlists
         // Ref: https://learn.microsoft.com/en-us/ef/core/modeling/relationships/one-to-many
         public ICollection<Playlist> Playlists { get; } = new List<Playlist>();
+
+        public ICollection<Song> Songs { get; } = new List<Song>();
     }
 }

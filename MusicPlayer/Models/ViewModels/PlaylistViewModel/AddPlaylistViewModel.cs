@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MusicPlayer.Models.ViewModels.Playlist
+namespace MusicPlayer.Models.ViewModels.PlaylistViewModel
 {
     public class AddPlaylistViewModel
     {

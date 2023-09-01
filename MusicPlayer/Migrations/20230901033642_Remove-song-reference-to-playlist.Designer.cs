@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicPlayer.Models.Database;
 
@@ -11,9 +12,11 @@ using MusicPlayer.Models.Database;
 namespace MusicPlayer.Migrations
 {
     [DbContext(typeof(MusicPlayerDbContext))]
-    partial class MusicPlayerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230901033642_Remove-song-reference-to-playlist")]
+    partial class Removesongreferencetoplaylist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,11 +195,16 @@ namespace MusicPlayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PlaylistId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SongName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SourceId", "UserId");
+
+                    b.HasIndex("PlaylistId");
 
                     b.HasIndex("UserId");
 
@@ -276,24 +284,6 @@ namespace MusicPlayer.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("PlaylistSong", b =>
-                {
-                    b.Property<int>("PlaylistsPlaylistId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SongsSourceId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("SongsUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("PlaylistsPlaylistId", "SongsSourceId", "SongsUserId");
-
-                    b.HasIndex("SongsSourceId", "SongsUserId");
-
-                    b.ToTable("PlaylistSong");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -358,6 +348,10 @@ namespace MusicPlayer.Migrations
 
             modelBuilder.Entity("MusicPlayer.Models.DataModels.Song", b =>
                 {
+                    b.HasOne("MusicPlayer.Models.DataModels.Playlist", null)
+                        .WithMany("Songs")
+                        .HasForeignKey("PlaylistId");
+
                     b.HasOne("MusicPlayer.Models.DataModels.User", "User")
                         .WithMany("Songs")
                         .HasForeignKey("UserId")
@@ -367,19 +361,9 @@ namespace MusicPlayer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PlaylistSong", b =>
+            modelBuilder.Entity("MusicPlayer.Models.DataModels.Playlist", b =>
                 {
-                    b.HasOne("MusicPlayer.Models.DataModels.Playlist", null)
-                        .WithMany()
-                        .HasForeignKey("PlaylistsPlaylistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MusicPlayer.Models.DataModels.Song", null)
-                        .WithMany()
-                        .HasForeignKey("SongsSourceId", "SongsUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Songs");
                 });
 
             modelBuilder.Entity("MusicPlayer.Models.DataModels.User", b =>

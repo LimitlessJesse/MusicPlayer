@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicPlayer.Models.Database;
 
@@ -11,9 +12,11 @@ using MusicPlayer.Models.Database;
 namespace MusicPlayer.Migrations
 {
     [DbContext(typeof(MusicPlayerDbContext))]
-    partial class MusicPlayerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230901022810_Add-UserId-As-key-To-Song")]
+    partial class AddUserIdAskeyToSong
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

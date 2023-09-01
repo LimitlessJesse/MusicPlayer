@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MusicPlayer.Models.ViewModels.User
+namespace MusicPlayer.Models.ViewModels.UserViewModels
 {
     public class RegisterViewModel
     {
