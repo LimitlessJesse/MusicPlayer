@@ -12,8 +12,8 @@ using MusicPlayer.Models.Database;
 namespace MusicPlayer.Migrations
 {
     [DbContext(typeof(MusicPlayerDbContext))]
-    [Migration("20230901035124_Remove-modelBuilder-for-Playlist")]
-    partial class RemovemodelBuilderforPlaylist
+    [Migration("20230903195131_add-property-to-join-entity")]
+    partial class addpropertytojoinentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,6 +181,29 @@ namespace MusicPlayer.Migrations
                     b.ToTable("Playlists");
                 });
 
+            modelBuilder.Entity("MusicPlayer.Models.DataModels.PlaylistSong", b =>
+                {
+                    b.Property<int>("PlaylistId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SongSourceId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SongUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("InsertedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.HasKey("PlaylistId", "SongSourceId", "SongUserId");
+
+                    b.HasIndex("SongSourceId", "SongUserId");
+
+                    b.ToTable("PlaylistsSong");
+                });
+
             modelBuilder.Entity("MusicPlayer.Models.DataModels.Song", b =>
                 {
                     b.Property<string>("SourceId")
@@ -279,24 +302,6 @@ namespace MusicPlayer.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("PlaylistSong", b =>
-                {
-                    b.Property<int>("PlaylistsPlaylistId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SongsSourceId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("SongsUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("PlaylistsPlaylistId", "SongsSourceId", "SongsUserId");
-
-                    b.HasIndex("SongsSourceId", "SongsUserId");
-
-                    b.ToTable("PlaylistSong");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -359,6 +364,21 @@ namespace MusicPlayer.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MusicPlayer.Models.DataModels.PlaylistSong", b =>
+                {
+                    b.HasOne("MusicPlayer.Models.DataModels.Playlist", null)
+                        .WithMany()
+                        .HasForeignKey("PlaylistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MusicPlayer.Models.DataModels.Song", null)
+                        .WithMany()
+                        .HasForeignKey("SongSourceId", "SongUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MusicPlayer.Models.DataModels.Song", b =>
                 {
                     b.HasOne("MusicPlayer.Models.DataModels.User", "User")
@@ -368,21 +388,6 @@ namespace MusicPlayer.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PlaylistSong", b =>
-                {
-                    b.HasOne("MusicPlayer.Models.DataModels.Playlist", null)
-                        .WithMany()
-                        .HasForeignKey("PlaylistsPlaylistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MusicPlayer.Models.DataModels.Song", null)
-                        .WithMany()
-                        .HasForeignKey("SongsSourceId", "SongsUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("MusicPlayer.Models.DataModels.User", b =>

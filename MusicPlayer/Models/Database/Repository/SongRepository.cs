@@ -18,8 +18,14 @@ namespace MusicPlayer.Models.Database.Repository
 
         public async Task<IEnumerable<Song>> GetAllSongByPlaylistIdAsync(int playlistId)
         {
-            var playlist = await _dbContext.Playlists.Include(p => p.Songs).FirstOrDefaultAsync(p => p.PlaylistId == playlistId);
-            return playlist!.Songs;
+            var songs = from playlist in _dbContext.Playlists
+                        join playlistSong in _dbContext.PlaylistsSong on playlist.PlaylistId equals playlistSong.PlaylistId
+                        join song in _dbContext.Songs on new { Source = playlistSong.SongSourceId, Owner = playlistSong.SongUserId }
+                             equals new { Source = song.SourceId, Owner = song.UserId }
+                        orderby playlistSong.InsertedOn
+                        select song;
+
+            return await songs.ToListAsync();
         }
 
         public async Task<Song> GetSongAsync(string sourceId, string userId)
