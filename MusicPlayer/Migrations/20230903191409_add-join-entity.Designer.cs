@@ -12,8 +12,8 @@ using MusicPlayer.Models.Database;
 namespace MusicPlayer.Migrations
 {
     [DbContext(typeof(MusicPlayerDbContext))]
-    [Migration("20230826203909_Identity")]
-    partial class Identity
+    [Migration("20230903191409_add-join-entity")]
+    partial class addjoinentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,10 +181,38 @@ namespace MusicPlayer.Migrations
                     b.ToTable("Playlists");
                 });
 
+            modelBuilder.Entity("MusicPlayer.Models.DataModels.PlaylistSong", b =>
+                {
+                    b.Property<int>("PlaylistId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SongsSourceId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SongsUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("InsertedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.HasKey("PlaylistId", "SongsSourceId", "SongsUserId");
+
+                    b.HasIndex("SongsSourceId", "SongsUserId");
+
+                    b.ToTable("PlaylistSong");
+                });
+
             modelBuilder.Entity("MusicPlayer.Models.DataModels.Song", b =>
                 {
                     b.Property<string>("SourceId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnOrder(0);
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnOrder(1);
 
                     b.Property<string>("Artist")
                         .IsRequired()
@@ -194,7 +222,9 @@ namespace MusicPlayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SourceId");
+                    b.HasKey("SourceId", "UserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Songs");
                 });
@@ -256,7 +286,6 @@ namespace MusicPlayer.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -271,21 +300,6 @@ namespace MusicPlayer.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("PlaylistSong", b =>
-                {
-                    b.Property<int>("PlaylistsPlaylistId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SongsSourceId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("PlaylistsPlaylistId", "SongsSourceId");
-
-                    b.HasIndex("SongsSourceId");
-
-                    b.ToTable("PlaylistSong");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -350,24 +364,37 @@ namespace MusicPlayer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PlaylistSong", b =>
+            modelBuilder.Entity("MusicPlayer.Models.DataModels.PlaylistSong", b =>
                 {
                     b.HasOne("MusicPlayer.Models.DataModels.Playlist", null)
                         .WithMany()
-                        .HasForeignKey("PlaylistsPlaylistId")
+                        .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MusicPlayer.Models.DataModels.Song", null)
                         .WithMany()
-                        .HasForeignKey("SongsSourceId")
+                        .HasForeignKey("SongsSourceId", "SongsUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MusicPlayer.Models.DataModels.Song", b =>
+                {
+                    b.HasOne("MusicPlayer.Models.DataModels.User", "User")
+                        .WithMany("Songs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MusicPlayer.Models.DataModels.User", b =>
                 {
                     b.Navigation("Playlists");
+
+                    b.Navigation("Songs");
                 });
 #pragma warning restore 612, 618
         }
