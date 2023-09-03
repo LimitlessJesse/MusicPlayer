@@ -18,7 +18,7 @@ namespace MusicPlayer.Models.Database.Repository
 
         public async Task<IEnumerable<Song>> GetAllSongByPlaylistIdAsync(int playlistId)
         {
-            var songs = from playlist in _dbContext.Playlists
+            var songs = from playlist in _dbContext.Playlists where playlist.PlaylistId == playlistId
                         join playlistSong in _dbContext.PlaylistsSong on playlist.PlaylistId equals playlistSong.PlaylistId
                         join song in _dbContext.Songs on new { Source = playlistSong.SongSourceId, Owner = playlistSong.SongUserId }
                              equals new { Source = song.SourceId, Owner = song.UserId }
