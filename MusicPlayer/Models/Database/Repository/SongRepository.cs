@@ -33,6 +33,43 @@ namespace MusicPlayer.Models.Database.Repository
             return await _dbContext.Songs.FirstOrDefaultAsync(s => s.SourceId == sourceId && s.UserId == userId);
         }
 
+        public async Task<Song> GetNextSongAsync(int playlistId, string sourceId, string userId, SongPlayMode playMode)
+        {
+
+            var songs = await GetAllSongByPlaylistIdAsync(playlistId);
+            var songList = songs.ToList();
+            if (playMode.Equals(SongPlayMode.Default))
+            {
+                var currSongIndex = songList.FindIndex(s => s.UserId == userId && s.SourceId == sourceId);
+                if (currSongIndex != songList.Count)
+                {
+                    var nextSong = songList[currSongIndex + 1];
+                    return nextSong;
+                }
+                else
+                {
+                    // null means it reach the end of the playlist, no more song to play
+                    return null!;
+                }
+            }
+            else if(playMode.Equals(SongPlayMode.Random))
+            {
+                Random rand = new Random();
+                int nextSongIndex = rand.Next(0, songList.Count);
+                return songList[nextSongIndex];
+            }
+            else if(playMode.Equals(SongPlayMode.PlaylistLoop))
+            {
+                var currSongIndex = songList.FindIndex(s => s.UserId == userId && s.SourceId == sourceId);
+                var nextSong = songList[ (currSongIndex + 1) % songList.Count ];
+                return nextSong;
+            }
+            
+            // Cuurently singleSongLoop playmode is handled in a upper level to avoid multiple calls, so 
+            // no condition should end up in here
+            return null!;
+        }
+
         public async Task<bool> AddSongToPlaylistAsync(Song song, int playlistIdToAdd)
         {
             var songExist = _dbContext.Songs.Any(s => s.SourceId == song.SourceId && s.UserId == song.UserId);

@@ -1,7 +1,12 @@
 ﻿@using MusicPlayer.Models.ViewModels.SongViewModel;
 @using MusicPlayer.Services;
 @using System.Web;
+@using System.Security.Claims;
 @model SongIndexViewModel
+
+@{
+    var songList = Model.Songs.ToList();
+}
 
 <div class="container">
     <div class="row">
@@ -94,6 +99,16 @@
             $.get("@Url.Action("ChangeSong","Song")?sourceId=" + sourceId,
                 function (data) {
                     $("#videoPlayer").html(data);
+                }
+            );
+        }
+
+        function PlayNextSong(currSourceId) {
+            $.get("@Url.Action("PlayNextSong","Song")?sourceId=" + currSourceId + "&playlistId=" + @Model.PlaylistId + "&playMode=0",
+                function (data) {
+                    if (data !== "") {
+                        ChangeSong(data);
+                    }
                 }
             );
         }
