@@ -81,5 +81,19 @@ namespace MusicPlayer.Controllers
             };
             return PartialView("_VideoPlayerPartialView",model);
         }
+
+        // Empty string indicate reach the end of the playlist, doesn't play next song (default mode)
+        public async Task<string> PlayNextSong(string sourceId, int playlistId, int playMode)
+        {
+            // Skip the query to DB so that it runs faster
+            if(playMode.Equals(SongPlayMode.SingleSongLoop))
+            {
+                return sourceId;
+            }
+
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var song = await _songRepository.GetNextSongAsync(playlistId, sourceId, currentUserId, (SongPlayMode)playMode);
+            return song == null ? "" : song.SourceId;
+        }
     }
 }
