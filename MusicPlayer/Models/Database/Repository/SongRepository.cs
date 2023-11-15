@@ -65,7 +65,7 @@ namespace MusicPlayer.Models.Database.Repository
                 return nextSong;
             }
             
-            // Cuurently singleSongLoop playmode is handled in a upper level to avoid multiple calls, so 
+            // Curently singleSongLoop playmode is handled in a upper level to avoid multiple calls, so 
             // no condition should end up in here
             return null!;
         }
@@ -98,12 +98,19 @@ namespace MusicPlayer.Models.Database.Repository
             return SaveToDatabase();
         }
 
-        public async Task<bool> RemoveSongFromPlaylistAsync(Song song, int playlistId)
+        public async Task<bool> RemoveSongFromPlaylistAsync(Song song, int playlistId, string userId)
         {
             var playlist = await _playlistRepository.GetCurrentUserPlaylistByIdAsync(playlistId);
             playlist.Songs.Remove(song);
 
             // TODO: Maybe remove the song entity from Song Table if no more reference to this song is found in any playlist?
+            var allPlaylists = await _playlistRepository.GetUserAllPlaylistAsync(userId);
+
+            if (!allPlaylists.Any(p => p.Songs.Any(s => s.SourceId == song.SourceId)))
+            {
+                _dbContext.Songs.Remove(song);
+            }
+
             return SaveToDatabase();
         }
 

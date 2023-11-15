@@ -69,7 +69,7 @@ namespace MusicPlayer.Controllers
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var song = await _songRepository.GetSongAsync(sourceId, currentUserId);
-            await _songRepository.RemoveSongFromPlaylistAsync(song, playlistId);
+            await _songRepository.RemoveSongFromPlaylistAsync(song, playlistId, currentUserId);
             return RedirectToAction("Index", "Song", new { id=playlistId });
         }
 
