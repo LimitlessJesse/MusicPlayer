@@ -86,7 +86,7 @@ namespace MusicPlayer.Controllers
         public async Task<string> PlayNextSong(string sourceId, int playlistId, int playMode)
         {
             // Skip the query to DB so that it runs faster
-            if(playMode.Equals(SongPlayMode.SingleSongLoop))
+            if(playMode.Equals((int)SongPlayMode.SingleSongLoop))
             {
                 return sourceId;
             }
