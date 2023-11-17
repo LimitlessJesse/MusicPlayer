@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MusicPlayer.Migrations
 {
     /// <inheritdoc />
-    public partial class addjoinentity : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -198,26 +198,26 @@ namespace MusicPlayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlaylistSong",
+                name: "PlaylistsSong",
                 columns: table => new
                 {
                     PlaylistId = table.Column<int>(type: "int", nullable: false),
-                    SongsSourceId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SongsUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SongSourceId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SongUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     InsertedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlaylistSong", x => new { x.PlaylistId, x.SongsSourceId, x.SongsUserId });
+                    table.PrimaryKey("PK_PlaylistsSong", x => new { x.PlaylistId, x.SongSourceId, x.SongUserId });
                     table.ForeignKey(
-                        name: "FK_PlaylistSong_Playlists_PlaylistId",
+                        name: "FK_PlaylistsSong_Playlists_PlaylistId",
                         column: x => x.PlaylistId,
                         principalTable: "Playlists",
                         principalColumn: "PlaylistId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PlaylistSong_Songs_SongsSourceId_SongsUserId",
-                        columns: x => new { x.SongsSourceId, x.SongsUserId },
+                        name: "FK_PlaylistsSong_Songs_SongSourceId_SongUserId",
+                        columns: x => new { x.SongSourceId, x.SongUserId },
                         principalTable: "Songs",
                         principalColumns: new[] { "SourceId", "UserId" },
                         onDelete: ReferentialAction.Cascade);
@@ -268,9 +268,9 @@ namespace MusicPlayer.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlaylistSong_SongsSourceId_SongsUserId",
-                table: "PlaylistSong",
-                columns: new[] { "SongsSourceId", "SongsUserId" });
+                name: "IX_PlaylistsSong_SongSourceId_SongUserId",
+                table: "PlaylistsSong",
+                columns: new[] { "SongSourceId", "SongUserId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Songs_UserId",
@@ -297,7 +297,7 @@ namespace MusicPlayer.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "PlaylistSong");
+                name: "PlaylistsSong");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

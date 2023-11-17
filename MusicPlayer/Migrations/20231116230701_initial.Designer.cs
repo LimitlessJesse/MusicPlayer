@@ -12,8 +12,8 @@ using MusicPlayer.Models.Database;
 namespace MusicPlayer.Migrations
 {
     [DbContext(typeof(MusicPlayerDbContext))]
-    [Migration("20230903195131_add-property-to-join-entity")]
-    partial class addpropertytojoinentity
+    [Migration("20231116230701_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
