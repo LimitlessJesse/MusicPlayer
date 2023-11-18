@@ -17,5 +17,6 @@ namespace MusicPlayer.Models.ViewModels.SongViewModel
         public string Artist { get; set; }
 
         public int PlaylistId { get; set; }
+
     }
 }
