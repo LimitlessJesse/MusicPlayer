@@ -23,7 +23,7 @@
         <div class="col">
             <div class="row">
                 <div class="col">
-                    <a id="ModeDisplay" class="btn btn-sm btn-success dropdown-toggle float-end" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Playing Mode: Default</a>
+                    <a id="ModeDisplay" class="btn btn-sm btn-info dropdown-toggle float-end" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Playing Mode: Default</a>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop4">
                         <a class="dropdown-item" onclick="ChangePlayListMode(this)">Default</a>
                         <a class="dropdown-item" onclick="ChangePlayListMode(this)">Random</a>
@@ -33,29 +33,35 @@
                 </div>
             </div>
             <div class="row">
-                <a class="btn btn-info btn-sm" onclick="AddSongToPlaylist(@Model.PlaylistId)">Add a song to this playlist</a>
+                <div class="col-11">
+                    <a class="btn btn-success btn-sm" style="width:100%" onclick="AddSongToPlaylist(@Model.PlaylistId)">Add a song to this playlist</a>
+                </div>
+                <div class="col-1">
+                    <a class="btn btn-info btn-sm float-end" onclick="window.open('https://github.com/LimitlessJesse/MusicPlayer/tree/main#readme', '_blank')">?</a>
+                </div>
             </div>
             <div class="row">
-                <div class="card">
+                <div class="col">
+                    <div class="card">
+                        <ul class="list-group list-group-flush">
 
-                    <ul class="list-group list-group-flush">
-
-                        @foreach (var song in Model.Songs)
-                        {
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-10">
-                                        <a class="btn" onclick="ChangeSong('@HttpUtility.UrlEncode(song.SourceId)')">@song.SongName - @song.Artist</a>
+                            @foreach (var song in Model.Songs)
+                            {
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <a class="btn" onclick="ChangeSong('@HttpUtility.UrlEncode(song.SourceId)')">@song.SongName - @song.Artist</a>
+                                        </div>
+                                        <div class="col-2">
+                                            <a class="btn btn-danger btn-sm float-end align-middle" onclick="DeleteSongFromPlaylist('@HttpUtility.UrlEncode(song.SourceId)' , @Model.PlaylistId)">
+                                                X
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="col-2">
-                                        <a class="btn btn-danger btn-sm float-end align-middle" onclick="DeleteSongFromPlaylist('@HttpUtility.UrlEncode(song.SourceId)' , @Model.PlaylistId)">
-                                            X
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
-                        }
-                    </ul>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
