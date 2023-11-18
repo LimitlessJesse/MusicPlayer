@@ -1,0 +1,32 @@
+﻿@using MusicPlayer.Models.ViewModels.SongViewModel
+@model AddSongViewModel
+
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="row">
+    <div class="col-md-12 offset-2">
+        <div class="col-md-8">
+            <form asp-action="AddSong">
+                <div class="form-group">
+                    <label asp-for="Source" class="control-label"></label>
+                    <textarea asp-for="Source" class="form-control" rows="6"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SongName" class="control-label"></label>
+                    <input asp-for="SongName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Artist" class="control-label"></label>
+                    <input asp-for="Artist" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-outline-success" type="submit" value="Add Song" />
+                    <a class="btn btn-outline-secondary float-end" asp-controller="Song" asp-action="Index" asp-route-id="@Model.PlaylistId">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

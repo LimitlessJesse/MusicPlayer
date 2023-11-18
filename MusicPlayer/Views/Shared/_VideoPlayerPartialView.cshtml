@@ -1,0 +1,50 @@
+﻿@using MusicPlayer.Services;
+@model VideoPlayerPartialViewModel;
+
+<div id="player">
+    
+</div>
+
+<script>
+
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // create youtube player
+    var player;
+    function onYouTubePlayerAPIReady() {
+        player = new YT.Player('player', {
+            height: '315',
+            width: '560',
+            videoId: '@Model.Url.Substring(0,11)',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+    }
+
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+
+    // when video ends
+    function onPlayerStateChange(event) {
+        if (event.data === 0) {
+            // This function exist in Views->Song->Index.cshtml
+            PlayNextSong('@Model.Url');
+        }
+    }
+
+    // The onYouTubePlayerAPIReady() will only run when the script is downloade for the first time
+    // Switching to a different song will only return the empty <div id="player"> without 
+    // replacing the <div> to an <iframe> video player. Have to manually call it again to create
+    // a new player so that it will replace the <div>
+    $("#player").ready(function () {
+        onYouTubePlayerAPIReady();
+    });
+
+</script>

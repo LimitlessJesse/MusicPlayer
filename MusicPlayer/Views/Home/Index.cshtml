@@ -1,0 +1,28 @@
+﻿@model IQueryable<User>
+
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+}
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-10">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <b>Welcome, @currentUser.FirstName</b>
+        }
+        else
+        {
+            <text>Welcome, please log in first to use the app</text>
+        }
+    </h1>
+</div>
+
