@@ -2,12 +2,16 @@
 {
     public class Utils
     {
-        private const string YOUTUBE_STARTER = "https://www.youtube.com/embed/";
-        private const int EMBED_LINK_LENGTH = 31;
+        private const string YOUTUBE_STARTER = "https://www.youtube.com/watch?v=";
+        private const int SOURCEID_LENGTH = 11;
 
         public static string SongSourceIdExtrator(string embedUrl)
-        {
-            return embedUrl.Substring(embedUrl.IndexOf(YOUTUBE_STARTER) + YOUTUBE_STARTER.Length, EMBED_LINK_LENGTH);
+        {   
+            if(embedUrl.IndexOf(YOUTUBE_STARTER) == -1)
+            {
+                return "";
+            }
+            return embedUrl.Substring(embedUrl.IndexOf(YOUTUBE_STARTER) + YOUTUBE_STARTER.Length, SOURCEID_LENGTH);
         }
 
         public static string EmbedUrlBuilder(string songSourceId)

@@ -43,14 +43,19 @@ namespace MusicPlayer.Controllers
         {
             // The id from the parameter is required because the PlaylistId in addsongViewModel is not inputted by the user, 
             // it will contain the default value, which is 0.
-            var newSong = new Song()
+            var sourceId = Utils.SongSourceIdExtrator(addsongViewModel.Source);
+            // TODO: Add error handling and error message. Form validation will not work because this is in a modal, more reaserach required
+            if(sourceId != "")
             {
-                SourceId = Utils.SongSourceIdExtrator(addsongViewModel.Source),
-                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
-                SongName = addsongViewModel.SongName,
-                Artist = addsongViewModel.Artist,
-            };
-            await _songRepository.AddSongToPlaylistAsync(newSong, id);
+                var newSong = new Song()
+                {
+                    SourceId = sourceId,
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    SongName = addsongViewModel.SongName,
+                    Artist = addsongViewModel.Artist,
+                };
+                await _songRepository.AddSongToPlaylistAsync(newSong, id);
+            }
             return RedirectToAction("Index", "Song", new { id });
         }
 
