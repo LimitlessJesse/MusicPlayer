@@ -11,7 +11,7 @@ This is a personal project made to play music from YouTube
 
 # How To Use
 
-Go to [here](musicplayerapplication.azurewebsites.net) to access the website
+Go to [here](https://musicplayerapplication.azurewebsites.net/) to access the website
 
 Register or Login if you already have an account on the top right corner
 
